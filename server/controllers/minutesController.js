@@ -1,8 +1,5 @@
-const redis = require('redis');
-const minutesModel = require('../models/minutesModel');
-const redisClient = redis.createClient();
-
-redisClient.connect().catch(console.error);
+const minutesModel = require('../models/minute');
+const redisClient = require('../models/redisClient');
 
 exports.getAllMinutes = async (req, res) => {
   try {
