@@ -26,12 +26,28 @@ const createMinutes = async (data) => {
       content,
       decision,
       attendees: {
-        create: attendees.map(attendee => ({
-          attendee: {
-            connectOrCreate: {
-              where: { name: attendee.name },
-              create: { name: attendee.name, department: attendee.department }
-            }
+        create: await Promise.all(attendees.map(async attendee => {
+          const existingAttendee = await prisma.attendees.findUnique({ where: { name: attendee.name }});
+          if (existingAttendee) {
+            return { 
+              attendee: {
+                connect: {
+                  id: existingAttendee.id,
+                  name: attendee.name,
+                  department: attendee.department
+                }
+              }
+             };
+          } else {
+            return {
+              attendee: {
+                create: {
+                  id: attendee.id,
+                  name: attendee.name,
+                  department: attendee.department
+                }
+              }
+            };
           }
         }))
       }
