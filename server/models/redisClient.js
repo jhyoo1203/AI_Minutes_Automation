@@ -6,14 +6,6 @@ const redisClient = redis.createClient({
 
 redisClient.connect().catch(console.error);
 
-redisClient.on('connect', function() {
-    console.log('Redis client connected');
-});
-
-redisClient.on('error', function(err) {
-    console.error('Redis error:', err);
-});
-
 const saveTempMinutes = async (id, tempMinutes) => {
     console.log(`Saving temporary minutes to Redis: ${id}`, tempMinutes); // 저장할 데이터 로그
     try {
