@@ -13,6 +13,21 @@ const getAllMinutes = async () => {
   });
 };
 
+const getMinutes = async (id) => {
+  return await prisma.minutes.findUnique({
+    where: {
+      id: parseInt(id)
+    },
+    include: {
+      attendees: {
+        include: {
+          attendee: true
+        }
+      }
+    }
+  });
+};
+
 const createMinutes = async (data) => {
   const { title, department, timeStart, timeEnd, place, item, content, decision, attendees } = data;
   return await prisma.minutes.create({
@@ -57,5 +72,6 @@ const createMinutes = async (data) => {
 
 module.exports = {
   getAllMinutes,
+  getMinutes,
   createMinutes
 };

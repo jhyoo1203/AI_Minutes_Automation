@@ -56,7 +56,21 @@ const getAllTempMinutes = async (req, res) => {
     }
 };
 
+const getTempMinutes = async (id) => {
+    console.log(`getTempMinutes function called with id: ${id}`); // 함수 호출 로그
+
+    try {
+        const tempMinutes = await redisClient.get(`tempMinutes:${id}`);
+        console.log('Fetched tempMinutes:', tempMinutes); // get 값 출력 로그
+        return JSON.parse(tempMinutes);
+    } catch (err) {
+        console.error(`Error fetching tempMinutes for id ${id}:`, err);
+        throw err;
+    }
+};
+
 module.exports = {
     saveTempMinutes,
-    getAllTempMinutes
+    getAllTempMinutes,
+    getTempMinutes
 };

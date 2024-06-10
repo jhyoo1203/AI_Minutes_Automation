@@ -10,6 +10,16 @@ exports.getAllMinutes = async (req, res) => {
   }
 };
 
+exports.getMinutes = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const minutes = await minutesModel.getMinutes(id);
+    res.json(minutes);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching minutes' });
+  }
+};
+
 exports.getAllTempMinutes = async (req, res) => {
   try {
     const tempMInutes = await redisClient.getAllTempMinutes();
@@ -18,6 +28,16 @@ exports.getAllTempMinutes = async (req, res) => {
     res.status(500).json({ error: 'Error fetching temporary minutes from Redis' });
   }
 };
+
+exports.getTempMinutes = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const tempMinutes = await redisClient.getTempMinutes(id);
+    res.json(tempMinutes);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching temporary minutes from Redis' });
+  }
+}
 
 exports.saveTempMinutes = async (req, res) => {
   const { id, title, department, timeStart, timeEnd, place, item, content, decision, attendees } = req.body;
