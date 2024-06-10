@@ -29,7 +29,7 @@ const getMinutes = async (id) => {
 };
 
 const createMinutes = async (data) => {
-  const { title, department, timeStart, timeEnd, place, item, content, decision, attendees } = data;
+  const { title, department, timeStart, timeEnd, place, item, content, decision, attendees, userId } = data;
   return await prisma.minutes.create({
     data: {
       title,
@@ -40,6 +40,11 @@ const createMinutes = async (data) => {
       item,
       content,
       decision,
+      user: {
+        connect: {
+          id: userId
+        }
+      },
       attendees: {
         create: await Promise.all(attendees.map(async attendee => {
           const existingAttendee = await prisma.attendees.findUnique({ where: { name: attendee.name }});

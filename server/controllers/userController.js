@@ -19,6 +19,16 @@ exports.getUser = async (req, res) => {
   }
 };
 
+exports.getUserIncludeMinutes = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await userModel.getUserIncludeMinutes(id);
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching user" });
+  }
+};
+
 exports.createUser = async (req, res) => {
   const { name, email, password } = req.body;
   const data = {

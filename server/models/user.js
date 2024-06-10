@@ -15,6 +15,17 @@ const getUser = async (id) => {
   });
 };
 
+const getUserIncludeMinutes = async (id) => {
+  return await prisma.user.findUnique({
+    where: {
+      id: parseInt(id),
+    },
+    include: {
+      minutes: true,
+    },
+  });
+};
+
 const createUser = async (data) => {
   const { name, email, password } = data;
   return await prisma.user.create({
@@ -29,5 +40,6 @@ const createUser = async (data) => {
 module.exports = {
   getAllUsers,
   getUser,
+  getUserIncludeMinutes,
   createUser,
 };

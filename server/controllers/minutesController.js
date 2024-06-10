@@ -40,7 +40,7 @@ exports.getTempMinutes = async (req, res) => {
 }
 
 exports.saveTempMinutes = async (req, res) => {
-  const { id, title, department, timeStart, timeEnd, place, item, content, decision, attendees } = req.body;
+  const { id, title, department, timeStart, timeEnd, place, item, content, decision, attendees, userId } = req.body;
   const tempMinutes = {
     id,
     title,
@@ -51,7 +51,8 @@ exports.saveTempMinutes = async (req, res) => {
     item,
     content,
     decision,
-    attendees
+    attendees,
+    userId
   };
   try {
     await redisClient.saveTempMinutes(id, tempMinutes);
@@ -85,7 +86,7 @@ exports.saveFinalMinutes = async (req, res) => {
 
 
 exports.saveMinutes = async (req, res) => {
-  const { id, title, department, timeStart, timeEnd, place, item, content, decision, attendees } = req.body;
+  const { id, title, department, timeStart, timeEnd, place, item, content, decision, attendees, userId } = req.body;
   const minutes = {
     id,
     title,
@@ -96,7 +97,8 @@ exports.saveMinutes = async (req, res) => {
     item,
     content,
     decision,
-    attendees
+    attendees,
+    userId
   };
   console.log('Saving minutes:', minutes);
   try {
