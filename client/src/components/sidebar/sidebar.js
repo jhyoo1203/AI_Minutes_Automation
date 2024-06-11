@@ -79,7 +79,7 @@ const Sidebar = () => {
       </nav>
 
       <div className="flex justify-center items-center mt-auto">
-        <div className="bg-green-500 hover:cursor-pointer hover:bg-green-600 text-white px-5 py-2 rounded-lg">
+        <div className="bg-green-500 hover:cursor-pointer hover:bg-green-600 text-white px-5 py-2 font-bold rounded-lg">
           로그인
         </div>
       </div>
