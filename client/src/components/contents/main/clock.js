@@ -20,8 +20,11 @@ const Clock = () => {
 
   return (
     <>
-      <p className="text-4xl font-bold mt-20">
-        Meeting Minutes 에 오신 것을 환영합니다!
+      <p
+        className="text-4xl font-bold mt-20"
+        style={{ fontFamily: "Tiny5", textShadow: "2px 2px 2px #000000" }}
+      >
+        Welcome to Meeting Minutes!
       </p>
       <p
         className="mt-20 text-6xl font-bold"
