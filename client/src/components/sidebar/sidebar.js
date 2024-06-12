@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
 import { MdStickyNote2 } from "react-icons/md";
 import { IoIosPerson } from "react-icons/io";
-import axios from "axios";
+
+import apiClient from "api";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const Sidebar = () => {
   };
 
   const handleLogout = () => {
-    axios.post("http://localhost:5000/users/logout", {
+    apiClient.post("/users/logout", {
       token,
     });
     localStorage.removeItem("token");
@@ -35,7 +36,11 @@ const Sidebar = () => {
     >
       <div className="flex items-center justify-between">
         <p className={"font-bold my-3 md:text-sm sm:text-xs"}>
-          {!isCollapsed ? (user ? user.name + "님의 회의록" : "로그인 필요합니다.") : ""}
+          {!isCollapsed
+            ? user
+              ? user.name + "님의 회의록"
+              : "로그인이 필요합니다."
+            : ""}
         </p>
         <div
           onClick={handleToggleSidebar}
@@ -97,9 +102,8 @@ const Sidebar = () => {
         </Link>
       </nav>
       <div className="flex justify-center items-center mt-auto">
-        {token ? (
+        {user ? (
           <>
-            {isCollapsed ? "" : user ? <p className="font-bold text-sm">{user.name}님 환영합니다.</p> : "로그인 필요합니다."}
             <div
               className="ml-3 bg-green-500 hover:cursor-pointer hover:bg-green-600 text-white md:text-sm sm:text-xs px-3 md:px-1 sm:px-0 py-2 font-bold rounded-lg"
               onClick={handleLogout}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import apiClient from "api";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -33,7 +33,7 @@ const LoginPage = () => {
 
     if (Object.keys(newErrors).length === 0) {
       try {
-        const response = await axios.post("http://localhost:5000/users/login", {
+        const response = await apiClient.post("/users/login", {
           email,
           password,
         });
