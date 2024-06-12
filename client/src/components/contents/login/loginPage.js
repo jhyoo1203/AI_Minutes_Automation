@@ -44,7 +44,11 @@ const LoginPage = () => {
         navigate("/");
         window.location.reload();
       } catch (error) {
-        console.error(error);
+        if (error.response && error.response.status === 401) {
+          newErrors.login = "아이디 또는 비밀번호가 틀렸습니다.";
+        } else {
+          console.error(error);
+        }
       }
     }
 
@@ -52,10 +56,10 @@ const LoginPage = () => {
   };
 
   const handleKeyPress = (event) => {
-    if(event.key === 'Enter'){
+    if (event.key === "Enter") {
       handleLogin();
     }
-  }
+  };
 
   return (
     <div
@@ -102,6 +106,9 @@ const LoginPage = () => {
               <p className="text-red-500 text-sm mt-1">{errors.password}</p>
             )}
           </label>
+          {errors.login && (
+            <p className="text-red-500 text-sm mt-1">{errors.login}</p>
+          )}
         </div>
 
         <div className="mb-6 relative flex items-center justify-between">
