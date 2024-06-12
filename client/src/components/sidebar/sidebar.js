@@ -19,19 +19,19 @@ const Sidebar = () => {
       }`}
     >
       <div className="flex items-center justify-between">
-        <p className={"font-bold my-3"}>
+        <p className={"font-bold my-3 md:text-sm sm:text-xs"}>
           {!isCollapsed ? "로그인 필요합니다." : ""}
         </p>
         <div
           onClick={toggleSidebar}
-          className="self-end mb-3 hover:cursor-pointer font-bold text-3xl"
+          className="self-end mb-3 hover:cursor-pointer font-bold text-3xl md:text-2xl sm:text-xl"
           style={{ letterSpacing: "-0.25em", transform: "scaleY(1.5)" }}
         >
           {isCollapsed ? ">>" : "<<"}
         </div>
       </div>
       <nav
-        className={`mt-10 flex flex-col text-lg items-center ${
+        className={`mt-10 flex flex-col text-lg md:text-base items-center ${
           isCollapsed ? "hidden" : ""
         }`}
       >
@@ -83,7 +83,7 @@ const Sidebar = () => {
       </nav>
 
       <div className="flex justify-center items-center mt-auto">
-        <div className="bg-green-500 hover:cursor-pointer hover:bg-green-600 text-white px-3 py-2 font-bold rounded-lg">
+        <div className="bg-green-500 hover:cursor-pointer hover:bg-green-600 text-white md:text-sm sm:text-xs px-3 md:px-1 sm:px-0 py-2 font-bold rounded-lg">
           로그인
         </div>
       </div>
