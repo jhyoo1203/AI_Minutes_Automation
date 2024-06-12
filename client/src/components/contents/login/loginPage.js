@@ -67,7 +67,7 @@ const LoginPage = () => {
         isCollapsed ? "pl-40" : "pl-64"
       } items-center mt-28`}
     >
-      <div className="w-96 p-10 bg-white rounded-lg shadow-lg">
+      <div className="w-96 p-10 bg-white rounded-lg shadow-lg border-2 border-gray-100">
         <h1 className="text-center text-2xl font-bold m-8">로그인</h1>
 
         <div className="mb-6 relative">
@@ -75,7 +75,7 @@ const LoginPage = () => {
             <input
               type="email"
               name="email"
-              className={`mt-1 px-3 py-2 bg-white border focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full sm:text-sm focus:ring-1 rounded-lg ${
+              className={`mt-1 px-3 py-2 bg-white border focus:outline-none focus:border-green-500 focus:ring-green-500 block w-full sm:text-sm focus:ring-1 rounded-lg ${
                 errors.email ? "border-red-500" : ""
               }`}
               placeholder="이메일을 입력해주세요."
@@ -94,7 +94,7 @@ const LoginPage = () => {
             <input
               type="password"
               name="password"
-              className={`mt-1 px-3 py-2 bg-white border focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full sm:text-sm focus:ring-1 rounded-lg ${
+              className={`mt-1 px-3 py-2 bg-white border focus:outline-none focus:border-green-500 focus:ring-green-500 block w-full sm:text-sm focus:ring-1 rounded-lg ${
                 errors.password ? "border-red-500" : ""
               }`}
               placeholder="비밀번호를 입력해주세요."

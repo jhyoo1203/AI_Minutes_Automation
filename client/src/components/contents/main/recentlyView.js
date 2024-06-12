@@ -15,7 +15,9 @@ const RecentlyView = () => {
 
   useEffect(() => {
     apiClient.get("/minutes").then((response) => {
-      const sortedData = response.data.sort((a, b) => new Date(b.timeEnd) - new Date(a.timeEnd));
+      const sortedData = response.data.sort(
+        (a, b) => new Date(b.timeEnd) - new Date(a.timeEnd)
+      );
       setAllMinutes(sortedData);
     });
   }, []);
@@ -61,14 +63,16 @@ const RecentlyView = () => {
               <div className="w-72 h-72 border-2 mt-5 border-green-500 hover:border-green-600 font-bold p-5 bg-green-50 items-center justify-center rounded-3xl shadow-md hover:shadow-lg">
                 <p className="text-2xl font-bold my-3">{minutes.title}</p>
                 <div className="flex flex-col justify-start items-start">
-                  <p>
-                    <span className="w-12 inline-block">시작:</span>
-                    {formatDate(minutes.timeStart)}
-                  </p>
-                  <p>
-                    <span className="w-12 inline-block">끝:</span>
-                    {formatDate(minutes.timeEnd)}
-                  </p>
+                  <div className="p-2 bg-white rounded-lg shadow-md border-2 border-gray-300">
+                    <p>
+                      <span className="w-12 inline-block">시작:</span>
+                      {formatDate(minutes.timeStart)}
+                    </p>
+                    <p>
+                      <span className="w-12 inline-block">끝:</span>
+                      {formatDate(minutes.timeEnd)}
+                    </p>
+                  </div>
                   <p>
                     <span className="mt-5 w-12 inline-block">장소:</span>
                     {minutes.place}
