@@ -1,15 +1,17 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleSidebar } from './sidebarAction';
+import { Link } from 'react-router-dom';
 
 import { FaHome } from "react-icons/fa";
 import { MdStickyNote2 } from "react-icons/md";
 import { IoIosPerson } from "react-icons/io";
 
 const Sidebar = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const dispatch = useDispatch();
+  const isCollapsed = useSelector(state => state.isCollapsed);
 
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
+  const handleToggleSidebar = () => {
+    dispatch(toggleSidebar());
   };
 
   return (
@@ -23,7 +25,7 @@ const Sidebar = () => {
           {!isCollapsed ? "로그인 필요합니다." : ""}
         </p>
         <div
-          onClick={toggleSidebar}
+          onClick={handleToggleSidebar}
           className="self-end mb-3 hover:cursor-pointer font-bold text-3xl md:text-2xl sm:text-xl"
           style={{ letterSpacing: "-0.25em", transform: "scaleY(1.5)" }}
         >
@@ -83,9 +85,11 @@ const Sidebar = () => {
       </nav>
 
       <div className="flex justify-center items-center mt-auto">
-        <div className="bg-green-500 hover:cursor-pointer hover:bg-green-600 text-white md:text-sm sm:text-xs px-3 md:px-1 sm:px-0 py-2 font-bold rounded-lg">
-          로그인
-        </div>
+        <Link to="/login">
+          <div className="bg-green-500 hover:cursor-pointer hover:bg-green-600 text-white md:text-sm sm:text-xs px-3 md:px-1 sm:px-0 py-2 font-bold rounded-lg">
+            로그인
+          </div>
+        </Link>
       </div>
     </div>
   );
