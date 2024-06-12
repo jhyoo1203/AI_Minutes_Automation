@@ -1,17 +1,30 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { toggleSidebar } from './sidebarAction';
-import { Link } from 'react-router-dom';
-
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleSidebar } from "./sidebarAction";
+import { Link } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
 import { MdStickyNote2 } from "react-icons/md";
 import { IoIosPerson } from "react-icons/io";
+import axios from "axios";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
-  const isCollapsed = useSelector(state => state.isCollapsed);
+  const isCollapsed = useSelector((state) => state.isCollapsed);
+
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const handleToggleSidebar = () => {
     dispatch(toggleSidebar());
+  };
+
+  const handleLogout = () => {
+    axios.post("http://localhost:5000/users/logout", {
+      token,
+    });
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.reload();
   };
 
   return (
@@ -22,7 +35,7 @@ const Sidebar = () => {
     >
       <div className="flex items-center justify-between">
         <p className={"font-bold my-3 md:text-sm sm:text-xs"}>
-          {!isCollapsed ? "로그인 필요합니다." : ""}
+          {!isCollapsed ? (user ? user.name + "님의 회의록" : "로그인 필요합니다.") : ""}
         </p>
         <div
           onClick={handleToggleSidebar}
@@ -83,13 +96,24 @@ const Sidebar = () => {
           <IoIosPerson />
         </Link>
       </nav>
-
       <div className="flex justify-center items-center mt-auto">
-        <Link to="/login">
-          <div className="bg-green-500 hover:cursor-pointer hover:bg-green-600 text-white md:text-sm sm:text-xs px-3 md:px-1 sm:px-0 py-2 font-bold rounded-lg">
-            로그인
-          </div>
-        </Link>
+        {token ? (
+          <>
+            {isCollapsed ? "" : user ? <p className="font-bold text-sm">{user.name}님 환영합니다.</p> : "로그인 필요합니다."}
+            <div
+              className="ml-3 bg-green-500 hover:cursor-pointer hover:bg-green-600 text-white md:text-sm sm:text-xs px-3 md:px-1 sm:px-0 py-2 font-bold rounded-lg"
+              onClick={handleLogout}
+            >
+              로그아웃
+            </div>
+          </>
+        ) : (
+          <Link to="/login">
+            <div className="bg-green-500 hover:cursor-pointer hover:bg-green-600 text-white md:text-sm sm:text-xs px-3 md:px-1 sm:px-0 py-2 font-bold rounded-lg">
+              로그인
+            </div>
+          </Link>
+        )}
       </div>
     </div>
   );

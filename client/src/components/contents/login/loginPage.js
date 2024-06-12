@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
-  const isCollapsed = useSelector(state => state.isCollapsed);
+  const isCollapsed = useSelector((state) => state.isCollapsed);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -17,7 +20,7 @@ const LoginPage = () => {
     return password.length >= 6;
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     const newErrors = {};
 
     if (!validateEmail(email)) {
@@ -27,11 +30,39 @@ const LoginPage = () => {
     if (!validatePassword(password)) {
       newErrors.password = "비밀번호가 틀렸습니다.";
     }
+
+    if (Object.keys(newErrors).length === 0) {
+      try {
+        const response = await axios.post("http://localhost:5000/users/login", {
+          email,
+          password,
+        });
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        const expiryDate = new Date().getTime() + 60 * 60 * 1000;
+        localStorage.setItem("expiryDate", expiryDate);
+        navigate("/");
+        window.location.reload();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     setErrors(newErrors);
   };
 
+  const handleKeyPress = (event) => {
+    if(event.key === 'Enter'){
+      handleLogin();
+    }
+  }
+
   return (
-    <div className={`flex flex-col w-full h-screen ${isCollapsed ? "pl-40" : "pl-64"} items-center mt-28`}>
+    <div
+      className={`flex flex-col w-full h-screen ${
+        isCollapsed ? "pl-40" : "pl-64"
+      } items-center mt-28`}
+    >
       <div className="w-96 p-10 bg-white rounded-lg shadow-lg">
         <h1 className="text-center text-2xl font-bold m-8">로그인</h1>
 
@@ -46,6 +77,7 @@ const LoginPage = () => {
               placeholder="이메일을 입력해주세요."
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onKeyPress={handleKeyPress}
             />
             {errors.email && (
               <p className="text-red-500 text-sm mt-1">{errors.email}</p>
@@ -64,6 +96,7 @@ const LoginPage = () => {
               placeholder="비밀번호를 입력해주세요."
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyPress={handleKeyPress}
             />
             {errors.password && (
               <p className="text-red-500 text-sm mt-1">{errors.password}</p>
