@@ -1,7 +1,7 @@
 import { TOGGLE_SIDEBAR } from './sidebarAction';
 
 const initialState = {
-  isCollapsed: true,
+  isCollapsed: false,
 };
 
 const sidebarReducer = (state = initialState, action) => {
