@@ -6,4 +6,6 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+router.get('/favicon.ico', (req, res) => res.status(204).end());
+
 module.exports = router;
