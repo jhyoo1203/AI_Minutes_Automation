@@ -28,6 +28,21 @@ const getMinutes = async (id) => {
   });
 };
 
+const getMinutesByUserId = async (userId) => {
+  return await prisma.minutes.findMany({
+    where: {
+      userId: parseInt(userId)
+    },
+    include: {
+      attendees: {
+        include: {
+          attendee: true
+        }
+      }
+    }
+  });
+}
+
 const createMinutes = async (data) => {
   const { title, department, timeStart, timeEnd, place, item, content, decision, attendees, userId } = data;
   return await prisma.minutes.create({
@@ -78,5 +93,6 @@ const createMinutes = async (data) => {
 module.exports = {
   getAllMinutes,
   getMinutes,
+  getMinutesByUserId,
   createMinutes
 };

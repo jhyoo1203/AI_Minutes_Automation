@@ -62,20 +62,40 @@ const Sidebar = () => {
           <FaHome className="mt-1" />
           <p className="ml-2">홈</p>
         </Link>
-        <Link
-          to="/minutes"
-          className="mt-5 w-full p-5 font-bold rounded-lg flex bg-green-50 shadow-md hover:shadow-lg"
-        >
-          <MdStickyNote2 className="mt-1" />
-          <p className="ml-2">회의록 작성</p>
-        </Link>
-        <Link
-          to="/myMinutes"
-          className="mt-5 w-full p-5 font-bold rounded-lg flex bg-green-50 shadow-md hover:shadow-lg"
-        >
-          <IoIosPerson className="mt-1" />
-          <p className="ml-2">내 회의록</p>
-        </Link>
+        {user ? (
+          <Link
+            to="/minutes"
+            className="mt-5 w-full p-5 font-bold rounded-lg flex bg-green-50 shadow-md hover:shadow-lg"
+          >
+            <MdStickyNote2 className="mt-1" />
+            <p className="ml-2">회의록 작성</p>
+          </Link>
+        ) : (
+          <div
+            className="mt-5 w-full p-5 font-bold rounded-lg flex bg-green-50 shadow-md hover:cursor-pointer hover:shadow-lg"
+            onClick={() => alert("로그인이 필요합니다.")}
+          >
+            <MdStickyNote2 className="mt-1" />
+            <p className="ml-2">회의록 작성</p>
+          </div>
+        )}
+        {user ? (
+          <Link
+            to="/myMinutes"
+            className="mt-5 w-full p-5 font-bold rounded-lg flex bg-green-50 shadow-md hover:shadow-lg"
+          >
+            <IoIosPerson className="mt-1" />
+            <p className="ml-2">내 회의록</p>
+          </Link>
+        ) : (
+          <div
+            className="mt-5 w-full p-5 font-bold rounded-lg flex bg-green-50 shadow-md hover:shadow-lg hover:cursor-pointer"
+            onClick={() => alert("로그인이 필요합니다.")}
+          >
+            <IoIosPerson className="mt-1" />
+            <p className="ml-2">내 회의록</p>
+          </div>
+        )}
       </nav>
       <nav
         className={`mt-10 flex flex-col text-lg items-center ${

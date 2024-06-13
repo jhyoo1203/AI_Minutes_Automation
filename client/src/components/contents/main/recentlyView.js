@@ -14,13 +14,11 @@ const RecentlyView = () => {
   const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
-    apiClient.get("/minutes").then((response) => {
-      const sortedData = response.data.sort(
-        (a, b) => new Date(b.timeEnd) - new Date(a.timeEnd)
-      );
-      setAllMinutes(sortedData);
+    apiClient.get(`/minutes/user/${user.id}`).then((response) => {
+      setAllMinutes(response.data);
+      console.log(response.data);
     });
-  }, []);
+  }, [user.id]);
 
   const formatDate = (dateString) => {
     const options = {

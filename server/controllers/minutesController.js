@@ -20,6 +20,16 @@ exports.getMinutes = async (req, res) => {
   }
 };
 
+exports.getMinutesByUserId = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const minutes = await minutesModel.getMinutesByUserId(userId);
+    res.json(minutes);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching minutes' });
+  }
+}
+
 exports.getAllTempMinutes = async (req, res) => {
   try {
     const tempMInutes = await redisClient.getAllTempMinutes();
