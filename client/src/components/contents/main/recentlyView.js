@@ -10,15 +10,16 @@ import { CiClock1 } from "react-icons/ci";
 
 const RecentlyView = () => {
   const [allMinutes, setAllMinutes] = useState([]);
-
-  const user = JSON.parse(localStorage.getItem("user"));
+  const [user] = useState(() => JSON.parse(localStorage.getItem("user")));
 
   useEffect(() => {
-    apiClient.get(`/minutes/user/${user.id}`).then((response) => {
-      setAllMinutes(response.data);
-      console.log(response.data);
-    });
-  }, [user.id]);
+    if (user) {
+      apiClient.get(`/minutes/user/${user.id}`).then((response) => {
+        setAllMinutes(response.data);
+        console.log(response.data);
+      });
+    }
+  }, [user]);
 
   const formatDate = (dateString) => {
     const options = {

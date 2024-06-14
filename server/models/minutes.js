@@ -1,5 +1,11 @@
 const { PrismaClient } = require("@prisma/client");
+const fs = require("fs");
+const speech = require("@google-cloud/speech");
 const prisma = new PrismaClient();
+
+const client = new speech.SpeechClient({
+  keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+});
 
 const getAllMinutes = async () => {
   return await prisma.minutes.findMany({
@@ -105,9 +111,34 @@ const createMinutes = async (data) => {
   });
 };
 
+const transcription = async (file) => {
+  const audioBytes = fs.readFileSync(file.path).toString("base64");
+  const audio = {
+    content: audioBytes,
+  };
+  const config = {
+    encoding: "LINEAR16",
+    sampleRateHertz: 16000,
+    languageCode: "ko-KR",
+  };
+  const request = {
+    audio: audio,
+    config: config,
+  };
+  const [response] = await client.recognize(request);
+  const transcription = response.results
+    .map((result) => result.alternatives[0].transcript)
+    .join("\n");
+  console.log(`Transcription: ${transcription}`);
+
+  return { transcription, audioRecord };
+};
+
+
 module.exports = {
   getAllMinutes,
   getMinutes,
   getMinutesByUserId,
   createMinutes,
+  transcription,
 };
