@@ -131,7 +131,7 @@ const transcription = async (file) => {
     .join("\n");
   console.log(`Transcription: ${transcription}`);
 
-  return { transcription, audioRecord };
+  return { transcription };
 };
 
 
