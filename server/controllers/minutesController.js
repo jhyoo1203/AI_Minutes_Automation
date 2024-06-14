@@ -1,4 +1,4 @@
-const minutesModel = require('../models/minute');
+const minutesModel = require('../models/minutes');
 const redisClient = require('../models/redisClient');
 
 exports.getAllMinutes = async (req, res) => {
