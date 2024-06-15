@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from 'react-redux';
 import apiClient from "api";
 
 const Minutes = () => {
@@ -6,6 +7,8 @@ const Minutes = () => {
   const [transcription, setTranscription] = useState("");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+
+  const isCollapsed = useSelector(state => state.isCollapsed);
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -44,10 +47,7 @@ const Minutes = () => {
   };
 
   return (
-    <div className="flex flex-col w-full transition-all duration-75 ease-in-out h-screen">
-      <div className="flex justify-center items-center h-full">
-        <h1 className="text-4xl font-bold">Meeting Minutes</h1>
-      </div>
+    <div className={`flex flex-col w-full transition-all duration-75 ease-in-out h-screen ${isCollapsed ? "pl-40" : "pl-64"}`}>
       <div className="flex justify-center items-center mt-8">
         <input type="file" accept="audio/*" onChange={handleFileChange} />
         <button
