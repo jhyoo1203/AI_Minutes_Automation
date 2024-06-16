@@ -55,7 +55,6 @@ exports.getTempMinutes = async (req, res) => {
 
 exports.saveTempMinutes = async (req, res) => {
   const {
-    id,
     title,
     department,
     timeStart,
@@ -65,10 +64,8 @@ exports.saveTempMinutes = async (req, res) => {
     content,
     decision,
     attendees,
-    userId,
   } = req.body;
   const tempMinutes = {
-    id,
     title,
     department,
     timeStart,
@@ -78,10 +75,9 @@ exports.saveTempMinutes = async (req, res) => {
     content,
     decision,
     attendees,
-    userId,
   };
   try {
-    await redisClient.saveTempMinutes(id, tempMinutes);
+    await redisClient.saveTempMinutes(tempMinutes);
     console.log(
       `Temporary minutes saved to Redis: ${JSON.stringify(tempMinutes)}`
     );
@@ -93,9 +89,8 @@ exports.saveTempMinutes = async (req, res) => {
 };
 
 exports.saveFinalMinutes = async (req, res) => {
-  const { id } = req.body;
   try {
-    const tempMinutesData = await redisClient.get(`tempMinutes:${id}`);
+    const tempMinutesData = await redisClient.get(`tempMinutes`);
     if (!tempMinutesData) {
       return res.status(404).json({ error: "Temporary minutes not found" });
     }
@@ -104,7 +99,7 @@ exports.saveFinalMinutes = async (req, res) => {
 
     const newMinutes = await minutesModel.createMinutes(tempMinutes);
 
-    await redisClient.del(`tempMinutes:${id}`);
+    await redisClient.del(`tempMinutes`);
     res.status(201).json(newMinutes);
   } catch (error) {
     res.status(500).json({ error: "Error saving final minutes" });
