@@ -35,7 +35,6 @@ model Minutes {
   content     String
   decision    String
   userId      Int
-  audioId     Int?
   user        User        @relation(fields: [userId], references: [id])
   attendees   MinutesAttendees[]
 }
