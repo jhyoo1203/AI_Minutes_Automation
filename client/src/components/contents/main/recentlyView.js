@@ -31,6 +31,14 @@ const RecentlyView = () => {
     };
     return new Date(dateString).toLocaleString("ko-KR", options);
   };
+  
+  const handleLongTitle = (title) => {
+    const maxLength = 10;
+    if (title.length > maxLength) {
+      return `${title.substring(0, maxLength)}...`;
+    }
+    return title;
+  };
 
   if (!user) {
     return (
@@ -60,7 +68,7 @@ const RecentlyView = () => {
           <SwiperSlide key={index}>
             <div className="flex justify-center mb-10">
               <div className="w-72 h-72 border-2 mt-5 border-green-500 hover:border-green-600 font-bold p-5 bg-green-50 items-center justify-center rounded-3xl shadow-md hover:shadow-lg">
-                <p className="text-2xl font-bold my-3">{minutes.title}</p>
+                <p className="text-2xl font-bold my-3">{handleLongTitle(minutes.title)}</p>
                 <div className="flex flex-col justify-start items-start">
                   <div className="p-2 bg-white rounded-lg shadow-md border-2 border-gray-300">
                     <p>

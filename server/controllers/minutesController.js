@@ -1,5 +1,5 @@
 const minutesModel = require("../models/minutes");
-const redisClient = require("../models/redisClient");
+const userModel = require("../models/user");
 
 exports.getAllMinutes = async (req, res) => {
   try {
@@ -30,116 +30,35 @@ exports.getMinutesByUserId = async (req, res) => {
   }
 };
 
-exports.getAllTempMinutes = async (req, res) => {
-  try {
-    const tempMInutes = await redisClient.getAllTempMinutes();
-    res.json(tempMInutes);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Error fetching temporary minutes from Redis" });
-  }
-};
-
 exports.getTempMinutes = async (req, res) => {
-  const { id } = req.params;
   try {
-    const tempMinutes = await redisClient.getTempMinutes(id);
+    const tempMinutes = await minutesModel.getTempMinutes();
     res.json(tempMinutes);
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Error fetching temporary minutes from Redis" });
-  }
-};
-
-exports.saveTempMinutes = async (req, res) => {
-  const {
-    title,
-    department,
-    timeStart,
-    timeEnd,
-    place,
-    item,
-    content,
-    decision,
-    attendees,
-  } = req.body;
-  const tempMinutes = {
-    title,
-    department,
-    timeStart,
-    timeEnd,
-    place,
-    item,
-    content,
-    decision,
-    attendees,
-  };
-  try {
-    await redisClient.saveTempMinutes(tempMinutes);
-    console.log(
-      `Temporary minutes saved to Redis: ${JSON.stringify(tempMinutes)}`
-    );
-    res.status(200).json({ message: "Temporary minutes saved to Redis" });
-  } catch (error) {
-    console.error("Error saving temporary minutes to Redis:", error);
-    res.status(500).json({ error: "Error saving temporary minutes" });
-  }
-};
-
-exports.saveFinalMinutes = async (req, res) => {
-  try {
-    const tempMinutesData = await redisClient.get(`tempMinutes`);
-    if (!tempMinutesData) {
-      return res.status(404).json({ error: "Temporary minutes not found" });
-    }
-
-    const tempMinutes = JSON.parse(tempMinutesData);
-
-    const newMinutes = await minutesModel.createMinutes(tempMinutes);
-
-    await redisClient.del(`tempMinutes`);
-    res.status(201).json(newMinutes);
-  } catch (error) {
-    res.status(500).json({ error: "Error saving final minutes" });
+    res.status(500).json({ error: "Error fetching temp minutes" });
   }
 };
 
 exports.saveMinutes = async (req, res) => {
-  const {
-    id,
-    title,
-    department,
-    timeStart,
-    timeEnd,
-    place,
-    item,
-    content,
-    decision,
-    attendees,
-    userId,
-  } = req.body;
-  const minutes = {
-    id,
-    title,
-    department,
-    timeStart,
-    timeEnd,
-    place,
-    item,
-    content,
-    decision,
-    attendees,
-    userId,
-  };
-  console.log("Saving minutes:", minutes);
+  const { token, minutesData } = req.body;
   try {
-    const newMinutes = await minutesModel.createMinutes(minutes);
+    const userId = await userModel.getUserIdByToken(token);
+
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    if (!minutesData) {
+      return res.status(400).json({ error: "Minutes data is required" });
+    }
+
+    await minutesModel.deleteTempMinutes();
+    const newMinutes = await minutesModel.createMinutes(minutesData, userId);
+
     res.status(201).json(newMinutes);
   } catch (error) {
     console.error("Error saving minutes:", error);
-    res.status(500).json({ error: "Error saving minutes" });
+    res.status(500).json({ error: "Error saving minutes", details: error.message });
   }
 };
 

@@ -23,6 +23,10 @@ const getUser = async (id) => {
   });
 };
 
+const getUserIdByToken = async (token) => {
+  return await redisClient.get(token);
+}
+
 const getUserIncludeMinutes = async (id) => {
   return await prisma.user.findUnique({
     where: {
@@ -82,6 +86,7 @@ const logoutUser = async (token) => {
 module.exports = {
   getAllUsers,
   getUser,
+  getUserIdByToken,
   getUserIncludeMinutes,
   createUser,
   loginUser,

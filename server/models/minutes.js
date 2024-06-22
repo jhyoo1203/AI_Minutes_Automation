@@ -59,7 +59,7 @@ const getMinutesByUserId = async (userId) => {
   });
 };
 
-const createMinutes = async (data) => {
+const createMinutes = async (data, userId) => {
   const {
     title,
     department,
@@ -70,55 +70,64 @@ const createMinutes = async (data) => {
     content,
     decision,
     attendees,
-    userId,
   } = data;
-  return await prisma.minutes.create({
-    data: {
-      title,
-      department,
-      timeStart: new Date(timeStart),
-      timeEnd: new Date(timeEnd),
-      place,
-      item,
-      content,
-      decision,
-      user: {
-        connect: {
-          id: userId,
+
+  try {
+    const newMinutes = await prisma.$transaction(async (prisma) => {
+      const createdMinutes = await prisma.minutes.create({
+        data: {
+          title,
+          department,
+          timeStart: new Date(timeStart),
+          timeEnd: new Date(timeEnd),
+          place,
+          item,
+          content,
+          decision,
+          user: {
+            connect: {
+              id: parseInt(userId),
+            },
+          },
+          attendees: {
+            create: await Promise.all(
+              attendees.map(async (attendee) => {
+                const existingAttendee = await prisma.attendees.findUnique({
+                  where: { name: attendee.name },
+                });
+                if (existingAttendee) {
+                  return {
+                    attendee: {
+                      connect: {
+                        id: existingAttendee.id,
+                      },
+                    },
+                  };
+                } else {
+                  return {
+                    attendee: {
+                      create: {
+                        name: attendee.name,
+                      },
+                    },
+                  };
+                }
+              })
+            ),
+          },
         },
-      },
-      attendees: {
-        create: await Promise.all(
-          attendees.map(async (attendee) => {
-            const existingAttendee = await prisma.attendees.findUnique({
-              where: { name: attendee.name },
-            });
-            if (existingAttendee) {
-              return {
-                attendee: {
-                  connect: {
-                    id: existingAttendee.id,
-                    name: attendee.name,
-                    department: attendee.department,
-                  },
-                },
-              };
-            } else {
-              return {
-                attendee: {
-                  create: {
-                    id: attendee.id,
-                    name: attendee.name,
-                    department: attendee.department,
-                  },
-                },
-              };
-            }
-          })
-        ),
-      },
-    },
-  });
+      });
+
+      return createdMinutes;
+    });
+
+    return newMinutes;
+  } catch (error) {
+    console.error("Failed to create minutes:", error);
+    throw new Error("Failed to create minutes");
+  } finally {
+    await prisma.$disconnect();
+  }
 };
 
 const transcription = async (file) => {
@@ -180,10 +189,36 @@ const callGpt35 = async (transcription) => {
   }
 };
 
+const getTempMinutes = async () => {
+  try {
+    const tempMinutes = await redisClient.get("tempMinutes");
+    if (tempMinutes) {
+      return JSON.parse(tempMinutes);
+    } else {
+      console.log("No tempMinutes found in Redis.");
+      return null;
+    }
+  } catch (error) {
+    console.error("getTempMinutes() error >>> ", error);
+    return null;
+  }
+};
+
+const deleteTempMinutes = async () => {
+  try {
+    await redisClient.del("tempMinutes");
+    console.log("Successfully deleted tempMinutes from Redis.");
+  } catch (error) {
+    console.error("deleteTempMinutes() error >>> ", error);
+  }
+};
+
 module.exports = {
   getAllMinutes,
   getMinutes,
   getMinutesByUserId,
   createMinutes,
   transcription,
+  getTempMinutes,
+  deleteTempMinutes,
 };

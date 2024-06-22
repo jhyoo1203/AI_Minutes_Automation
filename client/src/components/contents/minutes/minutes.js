@@ -1,14 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
 import apiClient from "api";
+import { useNavigate } from "react-router-dom";
 
 const Minutes = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [tempMinutes, setTempMinutes] = useState({});
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const isCollapsed = useSelector(state => state.isCollapsed);
+
+  useEffect(() => {
+    apiClient.get("/minutes/temp").then((response) => {
+      if (response.data !== null) {
+        setTempMinutes(response.data);
+      } else {
+        setTempMinutes({});
+      }
+    });
+  }, []);
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -54,6 +66,44 @@ const Minutes = () => {
       ...prev,
       [key]: value,
     }));
+  };
+
+  const handleSave = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Authentication token is missing. Please log in again.");
+        return;
+      }
+  
+      const attendeesArray = tempMinutes.attendees ? tempMinutes.attendees.split(',').map(name => ({ name: name.trim() })) : [];
+      if (attendeesArray.length === 0) {
+        alert("Please add at least one attendee.");
+        return;
+      }
+  
+      const updatedTempMinutes = {
+        ...tempMinutes,
+        attendees: attendeesArray,
+      };
+  
+      const response = await apiClient.post("/minutes/save", {
+        minutesData: updatedTempMinutes,
+        token,
+      });
+  
+      if (response.status === 201) {
+        setTempMinutes({});
+        alert("회의록 저장 성공!");
+        navigate("/");
+      } else {
+        console.error("Error saving minutes: ", response.statusText);
+        setError(`Error saving minutes: ${response.statusText}. Please try again.`);
+      }
+    } catch (error) {
+      console.error("Error saving minutes: ", error);
+      setError("Error saving minutes. Please try again.");
+    }
   };
 
   const labelMapping = {
@@ -106,7 +156,7 @@ const Minutes = () => {
           <div className="mt-64 text-center">
             <button
               className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 -ml-16 rounded mt-4"
-              onClick={() => console.log(tempMinutes)}
+              onClick={() => handleSave()}
             >
               회의록 저장
             </button>
