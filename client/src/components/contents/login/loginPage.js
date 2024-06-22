@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import apiClient from "api";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -63,7 +64,7 @@ const LoginPage = () => {
 
   return (
     <div
-      className={`flex flex-col w-full h-screen ${
+      className={`flex flex-col w-full ${
         isCollapsed ? "pl-40" : "pl-64"
       } items-center mt-28`}
     >
@@ -134,9 +135,9 @@ const LoginPage = () => {
 
       <div className="mt-4 text-center text-sm text-gray-700">
         <span>Meeting Minutes 처음이신가요? </span>
-        <span className="text-green-600 hover:underline hover:cursor-pointer">
+        <Link to="/signup" className="text-green-600 hover:underline">
           회원가입
-        </span>
+        </Link>
       </div>
     </div>
   );
