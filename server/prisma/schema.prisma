@@ -38,13 +38,11 @@ model Minutes {
   audioId     Int?
   user        User        @relation(fields: [userId], references: [id])
   attendees   MinutesAttendees[]
-  audio       MinutesAudio[]
 }
 
 model Attendees {
   id          Int                 @id @default(autoincrement())
   name        String
-  department  String
   minutes     MinutesAttendees[]
 }
 
@@ -55,19 +53,4 @@ model MinutesAttendees {
   attendee    Attendees  @relation(fields: [attendee_id], references: [id])
 
   @@id([minutes_id, attendee_id])
-}
-
-model Audio {
-  id          Int      @id @default(autoincrement())
-  transcription String
-  minutes     MinutesAudio[]
-}
-
-model MinutesAudio {
-  minutes_id  Int
-  audio_id    Int
-  minutes     Minutes  @relation(fields: [minutes_id], references: [id])
-  audio       Audio    @relation(fields: [audio_id], references: [id])
-
-  @@id([minutes_id, audio_id])
 }
