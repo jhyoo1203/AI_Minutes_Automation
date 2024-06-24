@@ -1,34 +1,47 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import apiClient from "api";
+import { useNavigate } from "react-router-dom";
 
 const MyMinutes = () => {
   const [allMinutes, setAllMinutes] = useState([]);
-
-  const isCollapsed = useSelector(state => state.isCollapsed);
-
+  const navigate = useNavigate();
+  const isCollapsed = useSelector((state) => state.isCollapsed);
   const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     apiClient.get(`/minutes/user/${user.id}`).then((response) => {
       setAllMinutes(response.data);
-      console.log(response.data);
     });
   }, [user.id]);
 
+  const goToDetailPage = (minuteId) => {
+    navigate(`/minutes/detail/${minuteId}`);
+  };
+
   return (
-    <div className="bg-yellow-50 w-full h-screen">
-      <div className={`flex flex-col w-full transition-all duration-75 ease-in-out ${isCollapsed ? "pl-40" : "pl-64"}`}>
-        <div className="mt-20 ml-20">
-          <p className="font-bold text-2xl">{user.name}님의 회의록</p>
+    <div className="bg-yellow-50 w-full min-h-screen p-5">
+      <div
+        className={`transition-all duration-300 ease-in-out ${
+          isCollapsed ? "pl-40" : "pl-80"
+        }`}
+      >
+        <div className="text-center py-10">
+          <h1 className="font-semibold text-3xl text-gray-700">
+            {user.name}님의 회의록
+          </h1>
         </div>
-        <div className="flex flex-wrap w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {allMinutes.map((minutes, index) => (
-            <div key={index} className="w-1/2 p-16">
-              <div className="border-2 border-gray-300 bg-white rounded-lg p-5">
-                <p className="font-bold text-xl">{minutes.title}</p>
-                <p className="text-lg">{minutes.content}</p>
-              </div>
+            <div
+              key={index}
+              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out cursor-pointer p-6"
+              onClick={() => goToDetailPage(minutes.id)}
+            >
+              <h2 className="font-semibold text-xl text-gray-800 mb-2">
+                {minutes.title}
+              </h2>
+              <p className="text-gray-600">{minutes.content}</p>
             </div>
           ))}
         </div>

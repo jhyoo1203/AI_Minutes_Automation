@@ -120,7 +120,10 @@ const Minutes = () => {
 
   return (
     <div className={`flex flex-col w-full transition-all duration-75 ease-in-out h-screen ${isCollapsed ? "pl-40" : "pl-64"}`}>
-      <div className="flex justify-center items-center mt-8">
+      <p className="text-3xl font-bold mt-20 text-center">
+        회의록 작성을 작성하기 위해 오디오 파일을 업로드해주세요.
+      </p>
+      <div className="flex justify-center items-center mt-12">
         <input type="file" accept="audio/*" onChange={handleFileChange} />
         <button
           className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4"
@@ -131,7 +134,7 @@ const Minutes = () => {
         </button>
       </div>
       {error && <p className="text-red-500 mt-2 text-center">{error}</p>}
-      <div className="flex">
+      <div className="flex mt-10 ml-40">
         {Object.keys(tempMinutes).length > 0 && (
           <div className="mt-3 w-[1000px] ml-28">
             <h2 className="text-2xl font-bold mb-5">회의 내용</h2>
