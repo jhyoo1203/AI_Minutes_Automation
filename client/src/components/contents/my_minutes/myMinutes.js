@@ -16,7 +16,7 @@ const MyMinutes = () => {
   }, [user.id]);
 
   const goToDetailPage = (minuteId) => {
-    navigate(`/minutes/detail/${minuteId}`);
+    navigate(`/myMinutes/${minuteId}`);
   };
 
   return (

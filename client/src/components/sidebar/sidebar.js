@@ -22,10 +22,11 @@ const Sidebar = () => {
   const handleLogout = () => {
     apiClient.post("/users/logout", {
       token,
+    }).then(() => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      window.location.href = "/";
     });
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    window.location.reload();
   };
 
   return (
@@ -35,7 +36,7 @@ const Sidebar = () => {
       }`}
     >
       <div className="flex items-center justify-between">
-        <p className={"font-bold my-3 md:text-sm sm:text-xs"}>
+        <p className={"font-bold my-3 text-md"}>
           {!isCollapsed
             ? user
               ? user.name + "님의 회의록"

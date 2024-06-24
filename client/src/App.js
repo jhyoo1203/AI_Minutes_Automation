@@ -13,6 +13,7 @@ import MyMinutes from "./components/contents/my_minutes/myMinutes";
 import LoginPage from "./components/contents/login/loginPage";
 import AuthCheck from "./components/contents/login/authCheck";
 import SignupPage from "./components/contents/login/signup";
+import MinutesDetail from "components/contents/my_minutes/minutesDetail";
 
 const store = createStore(sidebarReducer);
 
@@ -27,6 +28,7 @@ function App() {
             <Route path="/" element={<Main />} />
             <Route path="/minutes" element={<Minutes />} />
             <Route path="/myMinutes" element={<MyMinutes />} />
+            <Route path="/myMinutes/:minuteId" element={<MinutesDetail />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
           </Routes>
